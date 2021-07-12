@@ -47,3 +47,50 @@ After this command, the migration file is created. Now it is time to migrate and
 ```
 python3 manage.py migrate
 ```
+
+## Day 4 (Jul 12, 2021)
+
+Django is good at app structure design. For example, I can easily divided a provide to two parts: model-related apps and non-model-related apps.
+
+```
+project-name/
+  -- model-related app/
+  -- non-model-related app/
+```
+
+A non-model-related app here can be your static pages, such as `about`, `help` etc. The model-related app can be anyone of your business logic.
+
+```
+pages/
+  -- urls.py
+  -- views.py
+  -- templates/pages/
+     -- about.html
+     -- help.html
+```
+
+The `pages/urls.py` may like this.
+
+```py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('about', views.about, name='about'),
+    path('help', views.help, name='help')
+]
+```
+
+The `pages/views.py` may like this.
+
+```py
+from django.http import render
+
+def about(request):
+    # to get the about.html from the templates/
+    pass
+
+def help(request):
+    # to get the help.html from the templates/
+    pass
+```
