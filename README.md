@@ -50,7 +50,7 @@ python3 manage.py migrate
 
 ## Day 4 (Jul 12, 2021)
 
-Django is good at app structure design. For example, I can easily divided a provide to two parts: model-related apps and non-model-related apps.
+Django is good at app structure design. For example, I can easily divide a project to two parts: model-related apps and non-model-related apps.
 
 ```
 project-name/
