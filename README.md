@@ -94,3 +94,33 @@ def help(request):
     # to get the help.html from the templates/
     pass
 ```
+
+### Authorization
+
+对权限管理这部分，我的初步想法是，创建一个权限表，记录各类型用户的对各类资源的权限. `Permissions` tables is like.
+
+User_role | Resource | Permission (read,write?)
+-- | -- | --
+Superuser |  
+Admin |   |  
+一般user |   | 
+
+`Users` table. 也许创建一个`Roles` table更合理，然后对`User` table进行关联。一个User可以有多种多色，如admin和一般user，这个表怎么处理比较恰当呢？
+
+Name | Role
+-- | --
+Mary | Admin
+Jessie | 一般user
+C | 一般user
+
+在用户获取资源前，需先对其身份(role)进行确认，所以我会定义一个叫`check_permission(user)`的function.
+
+```py
+def check_permission(user):
+    """ Check whether a user has the right to access to a specific resource.
+    return True if can, otherwise return False
+    """
+    pass
+```
+
+
