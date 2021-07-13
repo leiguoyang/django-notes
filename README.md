@@ -123,4 +123,9 @@ def check_permission(user):
     pass
 ```
 
+## Day 5 (Jul 13, 2021)
+
+今天看了authentication这一章，感觉还是云里雾里的。^_^
+
+设计model field时一定要严谨，一方面是合理利用database，减少不必要的浪费。看了下Heroku提供的Postgres database的价格，最便宜的也要$50/month，容量才64GB，太贵了。1TB的要$1400/month。
 
