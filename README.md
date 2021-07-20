@@ -129,3 +129,65 @@ def check_permission(user):
 
 设计model field时一定要严谨，一方面是合理利用database，减少不必要的浪费。看了下Heroku提供的Postgres database的价格，最便宜的也要$50/month，容量才64GB，太贵了。1TB的要$1400/month。
 
+## Many to many relationship (Jul 20, 2021)
+
+今天学习model中[many to many relationship](https://docs.djangoproject.com/en/3.2/topics/db/models/#extra-fields-on-many-to-many-relationships)这一部分，突然懂了好多东西。其实可以先不谈many to many relationship这种概念或它所调用的API。先从最基础的表谈起，有些表和表之间本身就存在这种many to many的关系。比如其官网举的例子。
+
+```py
+from django.db import models
+
+class Person(models.Model):
+    name = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
+
+class Group(models.Model):
+    name = models.CharField(max_length=128)
+    members = models.ManyToManyField(Person, through='Membership')
+
+    def __str__(self):
+        return self.name
+
+class Membership(models.Model):
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    date_joined = models.DateField()
+    invite_reason = models.CharField(max_length=64)
+```
+
+这里会涉及两个对象，`Person` and `Group`，一个用户可以属于多个不同的Group，而一个Group也可以有多个不同的成员，也就是所谓的mang to many relationship。实际在database里面会有这样三个表，
+
+- `persons`
+- `groups`
+- `memberships`
+
+`memberships`这个表其实是用来记录哪个用户什么时候加入什么组别之类的这些信息。
+
+id | person_id | group_id | date_joined | invite_reason
+-- | -- | -- | -- | --
+
+再比如一个订单系统，其中会有这样三个表。
+
+`users`
+`products`
+`orders`
+
+`orders`这个表是用来记录哪个客户什么时候买了多少数量的产品。
+
+id | user_id | product_id | quantity | purchase_datetime
+-- | -- | -- | -- | --
+
+其实刚才谈的这两个案例，无论是加入群组也好还是下订单，其实抽象出来逻辑都一样，也就是所有的东西其实都是假的，只是名字不同而已。突然豁然开朗^_^。
+
+
+
+
+
+
+
+
+
+
+
+
