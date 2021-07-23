@@ -180,10 +180,11 @@ id | user_id | product_id | quantity | purchase_datetime
 
 其实刚才谈的这两个案例，无论是加入群组也好还是下订单，其实抽象出来逻辑都一样，也就是所有的东西其实都是假的，只是名字不同而已。突然豁然开朗^_^。
 
+## Reusable app (Jul 24, 2021)
 
+今天学习到的最重要概念就是制作reusable app,相当于一个独立功能的模块，而django相当于一个电路板，你可以制作独立的模块然后整合到这块板上。好好看这章[ContentType](https://docs.djangoproject.com/en/3.2/ref/contrib/contenttypes/).学会后，你也会制作`like`, `follow`, `comment` etc这些通用的功能模块了，它们背后的原理都一样。
 
-
-
+django有一个官方的comment package可以用。[django_comments](https://django-contrib-comments.readthedocs.io/en/latest/quickstart.html)
 
 
 
