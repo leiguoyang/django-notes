@@ -189,6 +189,7 @@ django有一个官方的comment package可以用。[django_comments](https://dja
 ### `contenttype` usage
 This article shows how to use the `contenttype`framework, it is very clear. https://stackoverflow.com/questions/20895429/how-exactly-do-django-content-types-work
 
+这篇文章也非常不错，告诉你如何制作`like` model. https://django.cowhite.com/blog/where-should-we-use-content-types-and-generic-relations-in-django/
 
 
 
