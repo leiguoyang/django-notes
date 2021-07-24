@@ -186,6 +186,8 @@ id | user_id | product_id | quantity | purchase_datetime
 
 django有一个官方的comment package可以用。[django_comments](https://django-contrib-comments.readthedocs.io/en/latest/quickstart.html)
 
+### `contenttype` usage
+This article shows how to use the `contenttype`framework, it is very clear. https://stackoverflow.com/questions/20895429/how-exactly-do-django-content-types-work
 
 
 
