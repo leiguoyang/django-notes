@@ -191,7 +191,38 @@ This article shows how to use the `contenttype`framework, it is very clear. http
 
 这篇文章也非常不错，告诉你如何制作`like` model. https://django.cowhite.com/blog/where-should-we-use-content-types-and-generic-relations-in-django/
 
+## Thoughts on model (Jul 28, 2021)
 
+I think there are two kinds of model, one is noun model and the other is verb model. For example, 
 
+```
+I buy a ticket.
+```
 
+Where `I` and `ticket` are both noun models, while `buy` is a verb model.
+
+```
+I will attend a meeting tomorrow afternoon.
+```
+
+Where `meeting` is a noun model, while `attend` is a verb model.
+
+More thought on model design.
+
+object.content_type and object.id
+
+```
+attend a meeting
+book a ticket
+buy a book
+pay for the food
+```
+
+transmitter => information with media => receiver
+
+transaction between objects. between things.
+
+I would like to call this abstract model `TransactionModel` or `InteractionModel`, which is better?
+
+Once defining this abstract model, then I will create the `attend` or `book` or `buy` model by inheriting from it. `attend`, `book` and `buy` essentially they are the same with different table names.
 
