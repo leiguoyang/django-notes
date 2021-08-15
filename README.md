@@ -226,3 +226,164 @@ I would like to call this abstract model `TransactionModel` or `InteractionModel
 
 Once defining this abstract model, then I will create the `attend` or `book` or `buy` model by inheriting from it. `attend`, `book` and `buy` essentially they are the same with different table names.
 
+## Use Form or ModelForm (Aug 15, 2021)
+
+在实现创建(create)和更新(update)的功能时，一般urls和view function命名如下。
+
+`urls.py`.
+
+```py
+urlpatterns = [
+    path('add', views.add, name='add'),
+    path('<int:id>/update', views.update, name='update'),
+    path('<int:id>', views.detail, name='detail'),
+    path('index', views.index, name='index')
+]
+```
+
+`views.py`.
+
+```py
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+from .forms import PostForm
+from .models import Post
+
+def add(request):
+    if request.method == 'GET':
+        form = PostForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'posts/add.html', context=context)
+    elif request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save()
+            return HttpResponseRedirect(reverse('detail', args=(post.id,)))
+        else:
+            return render(request, 'posts/add.html', context={ 'form': form })
+
+def update(request, id):
+    post = Post.objects.get(pk=id)
+
+    if request.method == 'GET':
+        form = PostForm(instance=post)
+        context = {
+            'form': form,
+            'post': post
+        }
+        return render(request, 'posts/update.html', context=context)
+    elif request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('detail', args=(id,)))
+        else:
+            context = {
+                'form': form,
+                'post': post
+            }
+            return render(request, 'posts/update.html', context=context)
+
+def detail(request, id):
+    post = Post.objects.get(pk=id)
+    context = {
+        'post': post
+    }
+    return render(request, 'posts/detail.html', context=context)
+
+def index(request):
+    posts = Post.objects.all()[:50]
+    context = {
+        'posts': posts
+    }
+
+    return render(request, 'posts/index.html', context=context)
+```
+
+如果是处理和Model相关的form，用ModelForm比较方便。
+
+`forms.py`.
+
+```py
+from django.forms import ModelForm, Textarea, TextInput
+from .models import Post
+
+class PostForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content']
+        widgets = {
+            'title': TextInput(attrs={ 'class': 'form-control' }),
+            'content': Textarea(attrs={ 'class': 'form-control' }),
+        }
+```
+
+template部分。
+
+创建一个`form.html`，在`add.html`或`update.html`里就可以直接共用这个ModelForm template。
+
+```html
+<div class="mb-3">
+    <label for="{{ form.title.id_for_label }}" class="form-label">标题</label>
+    {% if form.title.errors %}
+        <ul class="alert alert-info">
+        {% for error in form.title.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {{ form.title }}
+</div>
+<div class="mb-3">
+    <label for="{{ form.content.id_for_label }}" class="form-label">内容</label>
+    {% if form.content.errors %}
+        <ul class="alert alert-info">
+        {% for error in form.content.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {{ form.content }}
+</div>
+```
+
+`add.html`.
+
+```html
+{% extends 'posts/base.html' %}
+
+{% block title %}
+<title>Add a new post</title>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-6">
+    <form action="add" method="POST">
+        {% csrf_token %}
+        {% include 'posts/form.html' %}
+        <input type="submit" name="Add" value="发布" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}
+```
+
+`update.html`.
+
+```html
+{% extends 'posts/base.html' %}
+
+{% block title %}
+<title>Edit</title>
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'update' post.id %}" method="POST">
+    {% csrf_token %}
+    {% include 'posts/form.html' %}
+    <input type="submit" name="Update" value="更新" class="btn btn-primary">
+</form>
+{% endblock %}
+```
